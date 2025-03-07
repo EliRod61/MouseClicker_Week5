@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.Editor;
 using UnityEngine.UI;
 
 public class MoneyClicker : MonoBehaviour
@@ -23,6 +22,9 @@ public class MoneyClicker : MonoBehaviour
     [SerializeField]float doubleTapCost;
     bool doubleTapActive = false;
 
+    [Header("TriplePickles")]
+    [SerializeField] float triplePicklesCost;
+
     float picklesMultiplier;
     float ppm;
     
@@ -30,16 +32,18 @@ public class MoneyClicker : MonoBehaviour
     public TextMeshProUGUI currentPPM;
     public TextMeshProUGUI totalMoneyText;
 
-    public TextMeshProUGUI clickerUpgradeCostText;
-    public TextMeshProUGUI passiveUpgradeCostText;
-    public TextMeshProUGUI doubleTapCostText;
+    public TextMeshProUGUI clickerUpgradePriceText;
+    public TextMeshProUGUI passiveUpgradePriceText;
+    public TextMeshProUGUI doubleTapPriceText;
+    public TextMeshProUGUI triplePicklesPriceText;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        clickerUpgradeCostText.text = clickerUpgradeCost.ToString();
-        passiveUpgradeCostText.text = passiveUpgradeCost.ToString();
-        doubleTapCostText.text = doubleTapCost.ToString();
+        clickerUpgradePriceText.text = clickerUpgradeCost.ToString();
+        passiveUpgradePriceText.text = passiveUpgradeCost.ToString();
+        doubleTapPriceText.text = doubleTapCost.ToString();
     }
 
     // Update is called once per frame
@@ -52,10 +56,11 @@ public class MoneyClicker : MonoBehaviour
         totalMoneyText.text = wallet.ToString();
         currentClickingMultiplier.text = picklesMultiplier.ToString();
         currentPPM.text = ppm.ToString();
+        triplePicklesPriceText.text = triplePicklesCost.ToString();
 
         if (doubleTapActive == true)
         {
-            doubleTapCostText.text = "Bought";
+            doubleTapPriceText.text = "Bought";
         }
     }
 
@@ -80,7 +85,7 @@ public class MoneyClicker : MonoBehaviour
             clickerUpgradeCost = clickerUpgradeCost * Random.Range(1.5f, 1.7f);
 
             //Displays the new price
-            clickerUpgradeCostText.text = clickerUpgradeCost.ToString();
+            clickerUpgradePriceText.text = clickerUpgradeCost.ToString();
 
             //Random Increase in click amount when bought 
             float randomMultiplierIncrease = Random.Range(5f, 12f);
@@ -115,7 +120,7 @@ public class MoneyClicker : MonoBehaviour
             passiveUpgradeCost = passiveUpgradeCost * Random.Range(1.5f, 1.8f);
 
             //Displays new price
-            passiveUpgradeCostText.text = passiveUpgradeCost.ToString();
+            passiveUpgradePriceText.text = passiveUpgradeCost.ToString();
 
             //Random increase to PPM when bought
             float randomMultiplierIncrease = Random.Range(35f, 50f);
@@ -126,6 +131,24 @@ public class MoneyClicker : MonoBehaviour
             //Sets the new ppm
             passiveIncome += randomMultiplierIncrease;
        }
+    }
+
+    public void TripleProfits()
+    {
+        if (wallet >= triplePicklesCost)
+        {
+            //Takes price from wallet
+            wallet -= triplePicklesCost;
+
+            //Increase price by random range
+            triplePicklesCost = triplePicklesCost * 1.5f;
+
+            //Displays new price
+            triplePicklesPriceText.text = triplePicklesCost.ToString();
+
+            //Triples current clicker multiplier
+            clickerIncome = clickerIncome * 3;
+        }
     }
 
 
