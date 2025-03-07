@@ -22,9 +22,12 @@ public class MoneyClicker : MonoBehaviour
     [Header("DoubleTap")]
     [SerializeField]float doubleTapCost;
     bool doubleTapActive = false;
+
+    float picklesMultiplier;
+    float ppm;
     
-    public TextMeshProUGUI currentclickerIncomeText;
-    public TextMeshProUGUI currentPassiveIncome;
+    public TextMeshProUGUI currentClickingMultiplier;
+    public TextMeshProUGUI currentPPM;
     public TextMeshProUGUI totalMoneyText;
 
     public TextMeshProUGUI clickerUpgradeCostText;
@@ -46,18 +49,23 @@ public class MoneyClicker : MonoBehaviour
        {
               wallet += (clickerIncome + passiveIncome) * Time.deltaTime;
        }   
-       totalMoneyText.text = wallet.ToString();
+        totalMoneyText.text = wallet.ToString();
+        currentClickingMultiplier.text = picklesMultiplier.ToString();
+        currentPPM.text = ppm.ToString();
+
+        if (doubleTapActive == true)
+        {
+            doubleTapCostText.text = "Bought";
+        }
     }
 
     public void Clicker()
     {
        wallet += clickerIncome;
-       Debug.Log(wallet);
 
        if (doubleTapActive == true)
        {
           wallet += clickerIncome;
-          doubleTapCostText.text = "Bought";
        }
        //totalMoneyText.text = wallet.ToString();
     }
@@ -65,30 +73,58 @@ public class MoneyClicker : MonoBehaviour
     {  
        if (wallet >= clickerUpgradeCost)
        {
-          wallet -= clickerUpgradeCost;
-          clickerUpgradeCost = clickerUpgradeCost * Random.Range(1.2f,1.5f);
-          clickerUpgradeCostText.text = clickerUpgradeCost.ToString();
-          clickerIncome += Random.Range(2f,3f);
+            //Take away the amount from the wallet
+            wallet -= clickerUpgradeCost;
+
+            //Increases the price by random range
+            clickerUpgradeCost = clickerUpgradeCost * Random.Range(1.5f, 1.7f);
+
+            //Displays the new price
+            clickerUpgradeCostText.text = clickerUpgradeCost.ToString();
+
+            //Random Increase in click amount when bought 
+            float randomMultiplierIncrease = Random.Range(5f, 12f);
+
+            //Displays the multiplier
+            picklesMultiplier += randomMultiplierIncrease;
+
+            //Adds the multiplier to the click amount
+            clickerIncome += randomMultiplierIncrease;
        }
     }
     public void DoubleTap()
     {  
-       if (wallet >= doubleTapCost)
-       {
+        if (wallet >= doubleTapCost && doubleTapActive == false)
+        {
           doubleTapActive = true;
           wallet -= doubleTapCost;
-       }
+        }
     }
 
     public void MoneyOverTime()
     {  
        if (wallet >= passiveUpgradeCost)
        {
-          passiveIncomeActive = true;
-          wallet -= passiveUpgradeCost;
-          passiveUpgradeCost = passiveUpgradeCost * Random.Range(1.5f,2.0f);
-          passiveUpgradeCostText.text = passiveUpgradeCost.ToString();
-          passiveIncome += Random.Range(2f,3f);
+            //PPM activates -- start earning money passively
+            passiveIncomeActive = true;
+
+            //Takes price from wallet
+            wallet -= passiveUpgradeCost;
+
+            //Increase price by random range
+            passiveUpgradeCost = passiveUpgradeCost * Random.Range(1.5f, 1.8f);
+
+            //Displays new price
+            passiveUpgradeCostText.text = passiveUpgradeCost.ToString();
+
+            //Random increase to PPM when bought
+            float randomMultiplierIncrease = Random.Range(35f, 50f);
+
+            //displays the ppm
+            ppm += randomMultiplierIncrease;
+
+            //Sets the new ppm
+            passiveIncome += randomMultiplierIncrease;
        }
     }
 
